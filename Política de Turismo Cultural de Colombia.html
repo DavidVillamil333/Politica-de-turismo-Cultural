@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Política de Turismo Cultural de Colombia</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Warm Neutrals -->
+    <!-- Application Structure Plan: La aplicación está diseñada con una estructura temática no lineal para facilitar la exploración. Comienza con una visión general (el "porqué"), seguida de un diagnóstico interactivo con gráficos (el "qué"), un plan de acción con pestañas (el "cómo"), y los actores involucrados (el "quién"). Esta arquitectura, apoyada por una barra de navegación fija, permite a los usuarios saltar a la sección de su interés, mejorando la usabilidad y la comprensión del contenido denso del informe, en lugar de forzar una lectura secuencial que no se adapta a la web. -->
+    <!-- Visualization & Content Choices: 1. Oferta Cultural (Datos: 6,676 recursos) -> Meta: Informar composición -> Viz: Gráfico de Donut (Chart.js/Canvas) -> Interacción: Hover para detalles -> Justificación: Ideal para mostrar partes de un todo. 2. Patrimonio Inmaterial (Datos: Desglose) -> Meta: Comparar categorías -> Viz: Gráfico de Barras Horizontales (Chart.js/Canvas) -> Interacción: Hover para valores exactos -> Justificación: Eficaz para comparación directa. 3. Subtipologías de Turismo -> Meta: Organizar y explicar -> Viz: Tarjetas interactivas (HTML/CSS/JS) -> Interacción: Clic para ver definición -> Justificación: Fomenta la exploración activa. 4. Estrategias -> Meta: Organizar plan de acción -> Viz: Pestañas de navegación (HTML/CSS/JS) -> Interacción: Clic para cambiar contenido -> Justificación: Estructura la información compleja de forma limpia y accesible. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Lato', sans-serif;
+            background-color: #FDFBF8;
+            color: #333333;
+        }
+        h1, h2, h3, .font-montserrat {
+            font-family: 'Montserrat', sans-serif;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 320px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 400px;
+            }
+        }
+        .nav-link {
+            transition: color 0.3s, border-color 0.3s;
+        }
+        .nav-link:hover {
+            color: #E67E22;
+            border-color: #E67E22;
+        }
+        .tab.active {
+            background-color: #E67E22;
+            color: white;
+            border-color: #E67E22;
+        }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .subtipo-card { transition: transform 0.3s, box-shadow 0.3s; }
+        .subtipo-card:hover { transform: translateY(-5px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); }
+    </style>
+</head>
+<body class="antialiased">
+
+    <header class="bg-white/80 backdrop-blur-lg shadow-md sticky top-0 z-50">
+        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0">
+                    <h1 class="text-xl font-bold text-gray-800 font-montserrat">Turismo Cultural <span class="text-[#E67E22]">Colombia</span></h1>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4">
+                        <a href="#vision" class="nav-link text-gray-600 px-3 py-2 rounded-md text-sm font-medium border-b-2 border-transparent">Visión General</a>
+                        <a href="#diagnostico" class="nav-link text-gray-600 px-3 py-2 rounded-md text-sm font-medium border-b-2 border-transparent">Diagnóstico</a>
+                        <a href="#estrategia" class="nav-link text-gray-600 px-3 py-2 rounded-md text-sm font-medium border-b-2 border-transparent">La Estrategia</a>
+                        <a href="#actores" class="nav-link text-gray-600 px-3 py-2 rounded-md text-sm font-medium border-b-2 border-transparent">Actores Clave</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+
+        <section id="hero" class="text-center mb-20">
+            <h1 class="text-4xl md:text-5xl font-extrabold text-gray-900 leading-tight">
+                Colombia: Destino Turístico <br class="hidden md:block">
+                <span class="text-[#16A085]">Cultural, Creativo y Sostenible</span>
+            </h1>
+            <p class="mt-6 max-w-3xl mx-auto text-lg text-gray-600">
+                Una exploración interactiva de la política nacional que busca transformar el invaluable patrimonio de Colombia en un motor de desarrollo competitivo, sostenible e inclusivo.
+            </p>
+        </section>
+
+        <section id="vision" class="py-16">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-800">Visión General: El Futuro del Turismo</h2>
+                <p class="mt-4 text-md text-gray-600 max-w-2xl mx-auto">El objetivo central de la política es mejorar las condiciones para que el turismo cultural y creativo prospere, beneficiando a las comunidades locales, protegiendo nuestro patrimonio y posicionando a Colombia como un líder mundial.</p>
+            </div>
+
+            <div class="bg-white p-8 rounded-xl shadow-lg">
+                <h3 class="text-2xl font-semibold text-center mb-8">Un Mosaico de Experiencias: Las 10 Caras del Turismo Cultural</h3>
+                <div id="subtipologias-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+                </div>
+            </div>
+        </section>
+
+        <section id="diagnostico" class="py-16">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-800">Diagnóstico: Potencial y Desafíos</h2>
+                <p class="mt-4 text-md text-gray-600 max-w-2xl mx-auto">Colombia posee una riqueza cultural inmensa, pero enfrenta retos clave para su desarrollo turístico. Aquí analizamos la situación actual a través de los datos.</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+                <div class="bg-white p-8 rounded-xl shadow-lg">
+                    <h3 class="text-2xl font-semibold text-center mb-2">El Potencial de la Oferta Cultural</h3>
+                    <p class="text-center text-sm text-gray-500 mb-6">Composición de los 6,676 recursos y atractivos culturales de Colombia.</p>
+                    <div class="chart-container">
+                        <canvas id="ofertaCulturalChart"></canvas>
+                    </div>
+                </div>
+                <div class="bg-white p-8 rounded-xl shadow-lg">
+                    <h3 class="text-2xl font-semibold text-center mb-2">Riqueza Inmaterial: El Corazón de la Cultura</h3>
+                     <p class="text-center text-sm text-gray-500 mb-6">Desglose de los principales componentes del patrimonio inmaterial con vocación turística.</p>
+                    <div class="chart-container h-96 md:h-[450px]">
+                        <canvas id="inmaterialChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-16 bg-white p-8 rounded-xl shadow-lg">
+                <h3 class="text-2xl font-semibold text-center mb-8">Los 3 Grandes Desafíos a Superar</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+                    <div class="border-t-4 border-[#E67E22] pt-4">
+                        <h4 class="font-bold text-xl mb-3">1. Baja Competitividad</h4>
+                        <p class="text-gray-600 text-left text-sm">Escasa diferenciación de productos, falta de incentivos y financiación, y brechas en formación y tecnología limitan el potencial del sector.</p>
+                    </div>
+                    <div class="border-t-4 border-[#16A085] pt-4">
+                        <h4 class="font-bold text-xl mb-3">2. Sostenibilidad Limitada</h4>
+                        <p class="text-gray-600 text-left text-sm">Débil preservación del patrimonio y falta de criterios de sostenibilidad en la oferta, generando riesgos para los activos culturales y las comunidades.</p>
+                    </div>
+                    <div class="border-t-4 border-gray-400 pt-4">
+                        <h4 class="font-bold text-xl mb-3">3. Falta de Articulación</h4>
+                        <p class="text-gray-600 text-left text-sm">Descoordinación entre los sectores de turismo y cultura, y carencia de información unificada para la toma de decisiones estratégicas.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="estrategia" class="py-16">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-800">La Estrategia: Un Plan de 5 Ejes</h2>
+                <p class="mt-4 text-md text-gray-600 max-w-2xl mx-auto">Para superar los desafíos, la política propone un plan de acción integral. Navega por las pestañas para explorar cada eje estratégico y sus programas.</p>
+            </div>
+            
+            <div class="bg-white rounded-xl shadow-lg p-8">
+                <div class="mb-6 border-b border-gray-200">
+                    <nav id="strategy-tabs" class="flex flex-wrap -mb-px" aria-label="Tabs">
+                    </nav>
+                </div>
+                <div id="strategy-content">
+                </div>
+            </div>
+        </section>
+
+        <section id="actores" class="py-16">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-800">Actores Clave: Un Esfuerzo Conjunto</h2>
+                <p class="mt-4 text-md text-gray-600 max-w-2xl mx-auto">El éxito de esta política depende de la colaboración entre diversos actores de la sociedad. Estos son los protagonistas del cambio.</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="font-bold text-xl mb-4 text-[#E67E22]">Sector Público</h3>
+                    <ul class="list-disc list-inside space-y-2 text-gray-700">
+                        <li>MinComercio, Industria y Turismo</li>
+                        <li>Ministerio de Cultura</li>
+                        <li>FONTUR & ProColombia</li>
+                        <li>Autoridades departamentales y municipales</li>
+                    </ul>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="font-bold text-xl mb-4 text-[#16A085]">Sector Privado</h3>
+                    <ul class="list-disc list-inside space-y-2 text-gray-700">
+                        <li>Gremios del sector turístico y cultural</li>
+                        <li>Cámaras de Comercio</li>
+                        <li>Prestadores de servicios turísticos</li>
+                        <li>Agentes, artistas y gestores culturales</li>
+                    </ul>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="font-bold text-xl mb-4 text-gray-600">Comunidad y Sociedad Civil</h3>
+                    <ul class="list-disc list-inside space-y-2 text-gray-700">
+                        <li>Comunidades locales, étnicas y campesinas</li>
+                        <li>Vigías del Patrimonio</li>
+                        <li>Academia e instituciones educativas</li>
+                        <li>Viajeros y ciudadanía en general</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-gray-800 text-white">
+        <div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8 text-center">
+            <p class="text-sm">Aplicación generada a partir del Resumen Ejecutivo de la Política de Turismo Cultural de Colombia.</p>
+            <p class="text-xs text-gray-400 mt-2">Ministerio de Comercio, Industria y Turismo (2021).</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            const subtipologiasData = [
+                { name: 'Arqueológico', icon: '🏺', description: 'Visitas a sitios arqueológicos, vestigios y monumentos de culturas antiguas para contribuir a su conservación.' },
+                { name: 'Artesanías', icon: '🎨', description: 'Articulación con la cadena de valor de las artesanías para salvaguardar y difundir tradiciones ancestrales.' },
+                { name: 'Creativo', icon: '💡', description: 'Participación activa en experiencias de aprendizaje que desarrollan el potencial creativo del visitante.' },
+                { name: 'Etnoturismo', icon: '🗿', description: 'Realizado en territorios de grupos étnicos para conocer sus valores, formas de vida y costumbres.' },
+                { name: 'Gastronómico', icon: '🍲', description: 'Experiencias vinculadas con la comida, productos y actividades afines, desde lo tradicional a lo innovador.' },
+                { name: 'Histórico', icon: '🏛️', description: 'Visitas motivadas por conocer el valor histórico de un destino, sus museos, centros de memoria y monumentos.' },
+                { name: 'Literario', icon: '📚', description: 'Recorridos en torno a la literatura, lugares de obras y vida de autores.' },
+                { name: 'Musical', icon: '🎵', description: 'Experiencias relacionadas con la música, festivales, elaboración de instrumentos y música en vivo.' },
+                { name: 'Religioso', icon: '⛪', description: 'Desplazamientos motivados por la fe, peregrinaciones, festividades y rutas espirituales.' },
+                { name: 'Urbano', icon: '🏙️', description: 'Actividad turística en espacios urbanos, con sus experiencias culturales, arquitectónicas y sociales.' }
+            ];
+
+            const grid = document.getElementById('subtipologias-grid');
+            subtipologiasData.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'subtipo-card bg-gray-50 p-4 rounded-lg text-center cursor-pointer';
+                card.innerHTML = `
+                    <div class="text-4xl mb-2">${item.icon}</div>
+                    <h4 class="font-semibold font-montserrat text-sm">${item.name}</h4>
+                    <p class="description hidden text-xs text-gray-600 mt-2">${item.description}</p>
+                `;
+                grid.appendChild(card);
+                card.addEventListener('click', () => {
+                    const desc = card.querySelector('.description');
+                    const allDescs = grid.querySelectorAll('.description');
+                    const isActive = !desc.classList.contains('hidden');
+
+                    allDescs.forEach(d => d.classList.add('hidden'));
+                    
+                    if(!isActive) {
+                       desc.classList.remove('hidden');
+                    }
+                });
+            });
+
+
+            const ofertaCulturalCtx = document.getElementById('ofertaCulturalChart').getContext('2d');
+            new Chart(ofertaCulturalCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Patrimonio Inmueble', 'Patrimonio Inmaterial', 'Patrimonio Mueble'],
+                    datasets: [{
+                        label: 'Composición de la Oferta Cultural',
+                        data: [56.6, 32.2, 11.3],
+                        backgroundColor: ['#16A085', '#E67E22', '#34495E'],
+                        borderColor: '#FDFBF8',
+                        borderWidth: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom' },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `${context.label}: ${context.raw}%`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            const inmaterialCtx = document.getElementById('inmaterialChart').getContext('2d');
+            new Chart(inmaterialCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Fiestas y Eventos', 'Gastronomía', 'Danza y Música', 'Etnias', 'Artesanías', 'Otros', 'Lenguas'],
+                    datasets: [{
+                        label: 'Número de Recursos',
+                        data: [942, 604, 136, 118, 175, 150, 23],
+                        backgroundColor: '#E67E22',
+                        borderColor: '#c06516',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        title: { display: false }
+                    },
+                    scales: {
+                        x: { beginAtZero: true }
+                    }
+                }
+            });
+
+
+            const strategiesData = [
+                {
+                    title: "1. Consolidar la Oferta",
+                    content: `
+                        <h4 class="font-semibold text-lg mb-3">Programas Clave:</h4>
+                        <ul class="list-disc list-inside space-y-2 text-gray-700">
+                            <li><strong>Turismo con calidad:</strong> Mejora de normas y certificación de destinos y experiencias.</li>
+                            <li><strong>Nuevo talento humano:</strong> Fortalecimiento de capacidades y formación especializada.</li>
+                            <li><strong>Emprendimiento e innovación:</strong> Apoyo a empresas y desarrollo de destinos inteligentes.</li>
+                            <li><strong>Infraestructura y financiación:</strong> Fortalecimiento de la infraestructura y herramientas de inversión.</li>
+                        </ul>
+                    `
+                },
+                {
+                    title: "2. Innovar el Producto",
+                    content: `
+                        <h4 class="font-semibold text-lg mb-3">Programas Clave:</h4>
+                        <ul class="list-disc list-inside space-y-2 text-gray-700">
+                            <li><strong>Desarrollo de producto:</strong> Asistencia técnica, mejora de experiencias y creación de redes y rutas temáticas.</li>
+                            <li><strong>Fortalecimiento de productos insignia:</strong> Iniciativas como "Colombia a la Mesa", "Colombia, destino de fiesta" y "Colombia, vive su patrimonio".</li>
+                            <li><strong>Diferenciación de intereses especiales:</strong> Fomento del turismo de artes, cinematográfico, idiomático y creativo.</li>
+                        </ul>
+                    `
+                },
+                {
+                    title: "3. Fomentar y Promocionar",
+                    content: `
+                        <h4 class="font-semibold text-lg mb-3">Programas Clave:</h4>
+                        <ul class="list-disc list-inside space-y-2 text-gray-700">
+                            <li><strong>Cultura turística:</strong> Campañas de sensibilización y apropiación del patrimonio.</li>
+                            <li><strong>Creación de públicos:</strong> Estrategias para atraer nuevos segmentos de viajeros culturales.</li>
+                            <li><strong>Mercadeo y promoción:</strong> Desarrollo de mercadeo estratégico y promoción especializada.</li>
+                        </ul>
+                    `
+                },
+                {
+                    title: "4. Impulsar la Sostenibilidad",
+                    content: `
+                        <h4 class="font-semibold text-lg mb-3">Programas Clave:</h4>
+                        <ul class="list-disc list-inside space-y-2 text-gray-700">
+                            <li><strong>Turismo más sostenible:</strong> Mejora de criterios y asistencia técnica en sostenibilidad.</li>
+                            <li><strong>Instrumentos de sostenibilidad:</strong> Planificación sostenible y fortalecimiento de herramientas de conservación del patrimonio.</li>
+                        </ul>
+                    `
+                },
+                {
+                    title: "5. Mejorar la Gobernanza",
+                    content: `
+                        <h4 class="font-semibold text-lg mb-3">Programas Clave:</h4>
+                        <ul class="list-disc list-inside space-y-2 text-gray-700">
+                            <li><strong>Información estratégica:</strong> Realización de estudios e investigaciones para la toma de decisiones.</li>
+                            <li><strong>Gobernanza y capital social:</strong> Creación de una agenda conjunta y fomento de cadenas de valor productivas y eficientes.</li>
+                        </ul>
+                    `
+                }
+            ];
+
+            const tabsContainer = document.getElementById('strategy-tabs');
+            const contentContainer = document.getElementById('strategy-content');
+
+            strategiesData.forEach((strategy, index) => {
+                const tab = document.createElement('a');
+                tab.href = '#';
+                tab.className = 'tab shrink-0 border-b-2 font-medium text-sm text-center px-4 py-3 text-gray-500 hover:text-gray-700 hover:border-gray-300';
+                tab.textContent = strategy.title;
+                tab.dataset.index = index;
+                if (index === 0) tab.classList.add('active');
+                tabsContainer.appendChild(tab);
+
+                const content = document.createElement('div');
+                content.className = 'tab-content p-4';
+                content.innerHTML = strategy.content;
+                content.dataset.index = index;
+                if (index === 0) content.classList.add('active');
+                contentContainer.appendChild(content);
+            });
+
+            tabsContainer.addEventListener('click', (e) => {
+                e.preventDefault();
+                if (e.target.classList.contains('tab')) {
+                    const targetIndex = e.target.dataset.index;
+                    
+                    tabsContainer.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                    e.target.classList.add('active');
+                    
+                    contentContainer.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                    contentContainer.querySelector(`.tab-content[data-index='${targetIndex}']`).classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
